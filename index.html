@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="SortLab is an interactive sorting algorithm visualizer for learning and comparing sorting algorithms."
+    >
+
+    <title>SortLab | Sorting Algorithm Visualizer</title>
+
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+    <!-- ==================== HEADER ==================== -->
+    <header class="header">
+        <div class="header-content">
+            <a href="#" class="logo" aria-label="SortLab home">
+                <span class="logo-icon" aria-hidden="true">S</span>
+                <span>Sort<span class="logo-highlight">Lab</span></span>
+            </a>
+
+            <p class="tagline">
+                Understand sorting. Visualize every step.
+            </p>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- ==================== INTRODUCTION ==================== -->
+        <section class="intro">
+            <p class="eyebrow">INTERACTIVE LEARNING LAB</p>
+
+            <h1>Sorting Algorithm Visualizer</h1>
+
+            <p class="intro-description">
+                Explore how sorting algorithms work through animated
+                visualizations, step-by-step operations, and complexity analysis.
+            </p>
+        </section>
+
+        <!-- ==================== CONTROLS ==================== -->
+        <section class="controls-panel" aria-label="Visualization controls">
+
+            <div class="controls">
+                <div class="control-group">
+                    <label for="algorithm">Sorting Algorithm</label>
+
+                    <select id="algorithm" name="algorithm">
+                        <option value="bubble">Bubble Sort</option>
+                        <option value="selection">Selection Sort</option>
+                        <option value="insertion">Insertion Sort</option>
+                        <option value="merge">Merge Sort</option>
+                        <option value="quick">Quick Sort</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <div class="label-row">
+                        <label for="array-size">Array Size</label>
+                        <output id="array-size-value" for="array-size">20</output>
+                    </div>
+
+                    <input
+                        type="range"
+                        id="array-size"
+                        name="array-size"
+                        min="5"
+                        max="50"
+                        value="20"
+                    >
+                </div>
+
+                <div class="control-group">
+                    <label for="speed">Animation Speed</label>
+
+                    <select id="speed" name="speed">
+                        <option value="slow">Slow</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="fast">Fast</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-actions" aria-label="Sorting actions">
+                <button type="button" id="generate-btn" class="button button-secondary">
+                    Generate New Array
+                </button>
+
+                <button type="button" id="start-btn" class="button button-primary">
+                    Start Sorting
+                </button>
+
+                <button type="button" id="pause-btn" class="button button-secondary" disabled>
+                    Pause
+                </button>
+
+                <button type="button" id="step-btn" class="button button-secondary">
+                    Step Forward
+                </button>
+
+                <button type="button" id="reset-btn" class="button button-secondary">
+                    Reset
+                </button>
+            </div>
+        </section>
+
+        <!-- ==================== MAIN WORKSPACE ==================== -->
+        <section class="workspace" aria-label="Sorting workspace">
+
+            <!-- LEFT COLUMN: VISUALIZER AND STATISTICS -->
+            <div class="visualizer-column">
+
+                <section class="visualizer panel" aria-labelledby="visualizer-title">
+                    <div class="visualizer-heading">
+                        <div>
+                            <p class="section-kicker">LIVE VISUALIZATION</p>
+                            <h2 id="visualizer-title">Bubble Sort</h2>
+                        </div>
+
+                        <span id="status" class="status-badge" role="status" aria-live="polite">
+                            Ready
+                        </span>
+                    </div>
+
+                    <p class="visualizer-description">
+                        Watch the bars move as the algorithm processes the array.
+                    </p>
+
+                    <div
+                        id="array-container"
+                        class="array-container"
+                        role="img"
+                        aria-label="Array visualization. Generate an array or start sorting to explore it."
+                    ></div>
+
+                    <div class="legend" aria-label="Bar color legend">
+                        <span class="legend-item">
+                            <span class="legend-color legend-default"></span>
+                            Unsorted
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-color legend-comparing"></span>
+                            Comparing
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-color legend-swapping"></span>
+                            Swapping
+                        </span>
+
+                        <span class="legend-item">
+                            <span class="legend-color legend-sorted"></span>
+                            Sorted
+                        </span>
+                    </div>
+                </section>
+
+                <!-- STATISTICS -->
+                <section class="statistics" aria-label="Sorting statistics">
+
+                    <article class="stat-card">
+                        <span class="stat-label">Comparisons</span>
+                        <strong id="comparisons" class="stat-value">0</strong>
+                        <span class="stat-description">
+                            Element comparisons
+                        </span>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="stat-label">Swaps</span>
+                        <strong id="swaps" class="stat-value">0</strong>
+                        <span class="stat-description">
+                            Element exchanges
+                        </span>
+                    </article>
+
+                    <article class="stat-card">
+                        <span class="stat-label">Array Elements</span>
+                        <strong id="total-elements" class="stat-value">20</strong>
+                        <span class="stat-description">
+                            Current array size
+                        </span>
+                    </article>
+
+                </section>
+
+                <!-- CURRENT OPERATION -->
+                <section class="operation-card panel" aria-labelledby="operation-heading">
+                    <div class="section-heading">
+                        <div>
+                            <p class="section-kicker">STEP-BY-STEP</p>
+                            <h2 id="operation-heading">Current Operation</h2>
+                        </div>
+                    </div>
+
+                    <p id="current-operation" aria-live="polite">
+                        Generate an array or start sorting to see what happens at each step.
+                    </p>
+                </section>
+
+            </div>
+
+            <!-- RIGHT COLUMN: ALGORITHM LEARNING PANEL -->
+            <aside class="algorithm-info panel" aria-label="Algorithm learning panel">
+
+                <div class="section-heading learning-heading">
+                    <div>
+                        <p class="section-kicker">LEARNING PANEL</p>
+                        <h2>Understand the Algorithm</h2>
+                    </div>
+                </div>
+
+                <!-- ALGORITHM OVERVIEW -->
+                <section class="learning-card overview-card">
+                    <h3 id="algorithm-title">Bubble Sort</h3>
+
+                    <p id="algorithm-description">
+                        Bubble Sort repeatedly compares adjacent elements and
+                        swaps them when they are in the wrong order.
+                    </p>
+                </section>
+
+                <!-- PSEUDOCODE -->
+                <section class="learning-card pseudocode-card">
+                    <div class="section-heading">
+                        <div>
+                            <h3>Algorithm Pseudocode</h3>
+                            <p class="card-description">
+                                Follow the highlighted line during execution.
+                            </p>
+                        </div>
+                    </div>
+
+                    <pre id="pseudocode" class="pseudocode"><code>Select an algorithm to view its pseudocode.</code></pre>
+                </section>
+
+                <!-- TIME COMPLEXITY -->
+                <section class="learning-card complexity-card">
+                    <div class="section-heading">
+                        <div>
+                            <h3>Time Complexity</h3>
+                            <p class="card-description">
+                                Understand how running time grows with input size.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="complexity-list">
+
+                        <div class="complexity-item">
+                            <div class="complexity-label-row">
+                                <span class="complexity-label">Best Case</span>
+                                <strong id="best-case" class="complexity-value">O(n)</strong>
+                            </div>
+
+                            <p id="best-explanation" class="complexity-explanation">
+                                Depends on the algorithm and the initial arrangement.
+                            </p>
+                        </div>
+
+                        <div class="complexity-item">
+                            <div class="complexity-label-row">
+                                <span class="complexity-label">Average Case</span>
+                                <strong id="average-case" class="complexity-value">O(n²)</strong>
+                            </div>
+
+                            <p id="average-explanation" class="complexity-explanation">
+                                The expected running time for a typical input.
+                            </p>
+                        </div>
+
+                        <div class="complexity-item">
+                            <div class="complexity-label-row">
+                                <span class="complexity-label">Worst Case</span>
+                                <strong id="worst-case" class="complexity-value">O(n²)</strong>
+                            </div>
+
+                            <p id="worst-explanation" class="complexity-explanation">
+                                The upper bound on running time for the worst input.
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <p id="complexity-summary" class="complexity-summary">
+                        Select an algorithm to explore its time complexity.
+                    </p>
+                </section>
+
+            </aside>
+
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="footer">
+        <p>
+            SortLab — Learn algorithms by seeing how they work.
+        </p>
+        <p class="footer-subtitle">
+            Built for learning, experimentation, and algorithm analysis.
+        </p>
+    </footer>
+
+</body>
+</html>
